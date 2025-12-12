@@ -19,7 +19,15 @@ OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
 lm = dspy.LM(model=f"openai/{LLM_MODEL}", api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
 dspy.configure(lm=lm)
 
+
+first_time = True
+
 def search_weather(city: str):
+    global first_time
+    if first_time:
+        raise Exception("First time")
+    first_time = False
+    
     return {
         "city": city,
         "weather": random.choice(["sunny", "cloudy", "rainy", "snowy"]),
