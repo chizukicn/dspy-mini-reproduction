@@ -1,0 +1,45 @@
+name: Run main.py
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-main:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+      
+      - name: Set up Python
+        run: uv python install
+      
+      - name: Install dependencies
+        run: uv sync
+      
+      - name: Start MLflow server
+        run: |
+          mlflow server --host 0.0.0.0 --port 5000 &
+          sleep 5
+        env:
+          MLFLOW_BACKEND_STORE_URI: sqlite:///mlflow.db
+          MLFLOW_DEFAULT_ARTIFACT_ROOT: ./mlruns
+      
+      - name: Run main.py
+        run: uv run python main.py
+        env:
+          LLM_OPENAI_MODEL: ${{ secrets.LLM_OPENAI_MODEL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+        continue-on-error: true
