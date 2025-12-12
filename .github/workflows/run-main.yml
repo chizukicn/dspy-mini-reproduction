@@ -42,4 +42,3 @@ jobs:
           LLM_OPENAI_MODEL: ${{ secrets.LLM_OPENAI_MODEL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-        continue-on-error: true
