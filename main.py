@@ -25,7 +25,7 @@ first_time = True
 def search_weather(city: str):
     global first_time
     if first_time:
-        raise Exception("First time")
+        raise RuntimeError("First time")
     first_time = False
     
     return {
